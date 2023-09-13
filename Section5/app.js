@@ -3,15 +3,12 @@ const express = require("express");
 
 const app = express();
 
-app.use((req, res, next) => {
-    console.log('In the middleware1');
-    next()
-})
+app.use("/add-product", (req, res, next) => {
+    res.send("<h1>The Add product page</h1>");
+  });
 
-app.use((req, res, next) => {
-    console.log('In the other middleware!');
-})
+app.use("/", (req, res, next) => {
+  res.send("<h1>Hello from Express!</h1>");
+});
 
-const server = http.createServer(app);
-
-server.listen(3000);
+app.listen(3000);
