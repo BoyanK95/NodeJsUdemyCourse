@@ -1,9 +1,37 @@
+const mongodb = require("mongodb");
+const MongoClient = mongodb.MongoClient;
+
+let _db
+
+const uri = `mongodb+srv://bkoychev95:yejVBQaBJnzKh6BD@clusterexpressshop.thwnayk.mongodb.net/shop?retryWrites=true&w=majority`;
+
+const mongoConnect = (callback) => {
+  MongoClient.connect(uri)
+    .then((client) => {
+      console.log("Connected!");
+      _db = client.db()
+      callback()
+    })
+    .catch((err) => {
+      console.log(err);
+      throw err
+    });
+};
+
+const getDb = () => {
+  if (_db) {
+    return _db
+  }
+  throw 'No database found!'
+}
+
+exports.mongoConnect = mongoConnect
+exports.getDb = getDb
+
 // const { MongoClient, ServerApiVersion } = require('mongodb');
 // require('dotenv').config();
 
 // const uri = `mongodb+srv://bkoychev95:${process.env.MongoDB_PASS}@clusterexpressshop.thwnayk.mongodb.net/?retryWrites=true&w=majority`;
-const uri = `mongodb+srv://bkoychev95:yejVBQaBJnzKh6BD@clusterexpressshop.thwnayk.mongodb.net/?retryWrites=true&w=majority`;
-
 // // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 // const client = new MongoClient(uri, {
 //   serverApi: {
@@ -26,19 +54,3 @@ const uri = `mongodb+srv://bkoychev95:yejVBQaBJnzKh6BD@clusterexpressshop.thwnay
 //   }
 // }
 // run().catch(console.dir);
-
-const mongodb = require("mongodb");
-const MongoClient = mongodb.MongoClient;
-
-const mongoConnect = (callback) => {
-  MongoClient.connect(uri)
-    .then((client) => {
-      callback(client)
-      console.log("Connected!");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-module.exports = mongoConnect
