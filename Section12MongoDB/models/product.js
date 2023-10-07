@@ -2,11 +2,12 @@ const mongodb = require("mongodb");
 const getDb = require("../util/database").getDb;
 
 class Product {
-  constructor(title, price, description, imageUrl) {
+  constructor(id, title, price, description, imageUrl) {
     this.title = title;
     this.price = price;
     this.description = description;
     this.imageUrl = imageUrl;
+    this._id = id;
   }
 
   save() {
@@ -47,6 +48,16 @@ class Product {
         return product;
       })
       .catch((err) => console.log(err));
+  }
+
+  static deleteByID(prodId) {
+    const db = getDb();
+    if (!prodId) {
+      window.alert('There is no product mathcing this Id!')
+    }
+    return db
+      .collection("products")
+      .deleteOne({ _id: new mongodb.ObjectId(prodId) })
   }
 }
 
