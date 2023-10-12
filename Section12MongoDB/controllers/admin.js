@@ -19,8 +19,8 @@ exports.postAddProduct = (req, res, next) => {
     price,
     description,
     imageUrl,
-    null
-    // req.user._id
+    null,
+    req.user._id
   );
   console.log(product);
   product
