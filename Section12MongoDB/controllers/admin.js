@@ -15,11 +15,12 @@ exports.postAddProduct = (req, res, next) => {
   const description = req.body.description;
   console.log(req.user);
   const product = new Product(
-    null,
     title,
     price,
     description,
-    imageUrl
+    imageUrl,
+    null
+    // req.user._id
   );
   console.log(product);
   product
@@ -63,20 +64,21 @@ exports.postEditProduct = (req, res, next) => {
   const updatedDesc = req.body.description;
 
   const product = new Product(
-    prodId,
     updatedTitle,
     updatedPrice,
     updatedDesc,
-    updatedImageUrl
+    updatedImageUrl,
+    prodId
   );
-  console.log(product);
-
-  product
-    .save()
-    .then((result) => {
-      console.log(result);
-      console.log("UPDATED PRODUCT!");
-      res.redirect("/admin/products");
+  Product.deleteByID(prodId)
+    .then(() => {
+      product
+        .save()
+        .then((result) => {
+          console.log("UPDATED PRODUCT!");
+          res.redirect("/admin/products");
+        })
+        .catch((err) => console.log(err));
     })
     .catch((err) => console.log(err));
 };
