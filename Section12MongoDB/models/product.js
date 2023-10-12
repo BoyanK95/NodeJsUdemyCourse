@@ -54,11 +54,14 @@ class Product {
   static deleteByID(prodId) {
     const db = getDb();
     if (!prodId) {
-      window.alert('There is no product mathcing this Id!')
+      window.alert("There is no product mathcing this Id!");
+      throw new Error("Product with this ID not found!");
     }
     return db
       .collection("products")
       .deleteOne({ _id: new mongodb.ObjectId(prodId) })
+      .then(() => console.log("Product deleted!"))
+      .catch((err) => console.log(err));
   }
 }
 
