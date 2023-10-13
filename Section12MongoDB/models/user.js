@@ -34,11 +34,17 @@ class User {
       .catch((err) => console.log(err));
   }
 
+  getCart() {
+    const db = getDb();
+  }
+
   addToCart(product) {
     // const cartProducts = this.cart.items.findIndex(
     //   (cartProduct) => cartProduct._id === product._id
     // );
-    const updatedCart = { items: [{ ...product, quantity: 1 }] };
+    const updatedCart = {
+      items: [{ productId: new mongodb.ObjectId(product._id), quantity: 1 }],
+    };
     const db = getDb();
     return db
       .collection("users")
