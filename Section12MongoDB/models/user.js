@@ -16,7 +16,7 @@ class User {
       .insertOne(this)
       .then((user) => {
         console.log("User Created !");
-        console.log(user);
+        // console.log(user);
       })
       .catch((err) => console.log(err));
   }
@@ -28,7 +28,7 @@ class User {
       .findOne({ _id: new mongodb.ObjectId(usedId) })
       .then((user) => {
         console.log("User Found!");
-        console.log(user);
+        // console.log(user);
         return user;
       })
       .catch((err) => console.log(err));
@@ -39,12 +39,26 @@ class User {
   }
 
   addToCart(product) {
-    // const cartProducts = this.cart.items.findIndex(
-    //   (cartProduct) => cartProduct._id === product._id
-    // );
+    const cartProductIndex = this.cart.items.findIndex((cp) => {
+      return cp.productId.toString() === product.userId.toString();
+    });
+    let newQuantity = 1;
+    const updatedCartItems = [...this.cart.items];
+    console.log(cartProductIndex);
+    if (cartProductIndex >= 0) {
+      newQuantity = this.cart.items[cartProductIndex].quantity + 1;
+      updatedCartItems[cartProductIndex] = newQuantity;
+    } else {
+      updatedCartItems.push({
+        productId: new mongodb.ObjectId(product._id),
+        quantity: newQuantity,
+      });
+    }
+
     const updatedCart = {
-      items: [{ productId: new mongodb.ObjectId(product._id), quantity: 1 }],
+      items: updatedCartItems,
     };
+
     const db = getDb();
     return db
       .collection("users")
