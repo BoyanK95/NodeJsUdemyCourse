@@ -104,8 +104,14 @@ class User {
       .collection("orders")
       .find({ "user._id": new mongodb.ObjectId(this._id) })
       .toArray()
-      .then(() => console.log("Geting orders"))
-      .catch((err) => console.log(err));
+      .then((orders) => {
+        console.log("Orders retrieved:", orders);
+        return orders;
+      })
+      .catch((err) => {
+        console.log("Error retrieving orders:", err);
+        throw err;
+      });
   }
 
   addOrder() {
@@ -122,9 +128,8 @@ class User {
         };
         return db.collection("orders").insertOne(order);
       })
-      .then(() => {
-        this.cart = { items: [] }; //emptying the cart after order
-        /** updating DB users collection with empty cart state */
+      .then((result) => {
+        this.cart = { items: [] };
         return db
           .collection("users")
           .updateOne(
