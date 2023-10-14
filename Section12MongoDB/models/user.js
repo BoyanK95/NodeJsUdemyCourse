@@ -98,11 +98,30 @@ class User {
       );
   }
 
-  addOrder() {
+  getOrders() {
     const db = getDb();
     return db
       .collection("orders")
-      .insertOne(this.cart)
+      .find({ "user._id": new mongodb.ObjectId(this._id) })
+      .toArray()
+      .then(() => console.log("Geting orders"))
+      .catch((err) => console.log(err));
+  }
+
+  addOrder() {
+    const db = getDb();
+
+    return this.getCart()
+      .then((products) => {
+        const order = {
+          items: products,
+          user: {
+            _id: new mongodb.ObjectId(this._id),
+            name: this.name,
+          },
+        };
+        return db.collection("orders").insertOne(order);
+      })
       .then(() => {
         this.cart = { items: [] }; //emptying the cart after order
         /** updating DB users collection with empty cart state */
